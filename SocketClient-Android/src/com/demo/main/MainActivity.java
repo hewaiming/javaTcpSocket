@@ -53,6 +53,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				@Override
 				public void run() {
 					txReceive.append(s);
+					txReceive.append("\n");
 				}
 			});
 		}

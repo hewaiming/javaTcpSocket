@@ -2,6 +2,10 @@ package com.jzj.socket;
 
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+
+import bean.PotStatus;
+import bean.RealTime;
 
 /**
  * TCP Socket客户端
@@ -51,6 +55,18 @@ public abstract class TcpClient implements Runnable {
 				public void onDisconnect(InetAddress addr) {
 					connect = false;
 					TcpClient.this.onDisconnect(this);
+				}
+
+				@Override
+				public void onReceive(InetAddress addr, RealTime rTime) {
+					TcpClient.this.onReceive(this, rTime);  //import
+					
+				}
+
+				@Override
+				public void onReceive(InetAddress addr, ArrayList<PotStatus> potStatus) {
+					TcpClient.this.onReceive(this, potStatus);  //import
+					
 				}
 			};
 			transceiver.start();
@@ -116,7 +132,10 @@ public abstract class TcpClient implements Runnable {
 	 *            字符串
 	 */
 	public abstract void onReceive(SocketTransceiver transceiver, String s);
-
+	
+	public abstract void onReceive(SocketTransceiver transceiver, RealTime realTime);
+	
+	public abstract void onReceive(SocketTransceiver transceiver, ArrayList<PotStatus> potStatus);
 	/**
 	 * 连接断开
 	 * <p>

@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import bean.RequestAction;
+
 /**
  * TCP Socket服务器端
  * 
@@ -95,10 +97,19 @@ public abstract class TcpServer implements Runnable {
 				TcpServer.this.onReceive(this, s);
 			}
 
+			
 			@Override
 			public void onDisconnect(InetAddress addr) {
 				clients.remove(this);
 				TcpServer.this.onDisconnect(this);
+			}
+
+
+			//处理客户端各种命令
+			@Override
+			public void onReceive(InetAddress addr, RequestAction action) {
+				TcpServer.this.onReceive(this, action);  //import
+				
 			}
 		};
 		client.start();
@@ -134,7 +145,9 @@ public abstract class TcpServer implements Runnable {
 	 *            字符串
 	 */
 	public abstract void onReceive(SocketTransceiver client, String s);
-
+	
+	
+	public abstract void onReceive(SocketTransceiver client, RequestAction action);
 	/**
 	 * 客户端：连接断开
 	 * <p>

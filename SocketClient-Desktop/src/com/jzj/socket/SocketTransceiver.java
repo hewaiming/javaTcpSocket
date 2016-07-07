@@ -3,8 +3,14 @@ package com.jzj.socket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+
+import bean.PotStatus;
+import bean.RealTime;
+import bean.RequestAction;
 
 /**
  * Socket收发器 通过Socket发送数据，并使用新线程监听Socket接收到的数据
@@ -18,6 +24,7 @@ public abstract class SocketTransceiver implements Runnable {
 	protected InetAddress addr;
 	protected DataInputStream in;
 	protected DataOutputStream out;
+	protected ObjectInputStream objectInputStream;
 	private boolean runFlag;
 
 	/**
@@ -85,6 +92,21 @@ public abstract class SocketTransceiver implements Runnable {
 		return false;
 	}
 
+	// 向服务端发送操作命令
+	public boolean send(RequestAction action) {
+		if (out != null) {
+			try {
+				out.writeInt(action.getActionId());
+				out.writeUTF(action.getPotNo_Area());
+				out.flush();
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * 监听Socket接收的数据(新线程中运行)
 	 */
@@ -93,18 +115,32 @@ public abstract class SocketTransceiver implements Runnable {
 		try {
 			in = new DataInputStream(this.socket.getInputStream());
 			out = new DataOutputStream(this.socket.getOutputStream());
+			objectInputStream=new ObjectInputStream(this.socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 			runFlag = false;
 		}
 		while (runFlag) {
-			try {
-				final String s = in.readUTF();
-				this.onReceive(addr, s);
-			} catch (IOException e) {
-				// 连接被断开(被动)
-				runFlag = false;
-			}
+		    try {
+				int actionId=objectInputStream.readInt();
+				if (actionId==1){
+					final RealTime rTime = (RealTime) objectInputStream.readObject();
+					this.onReceive(addr, rTime);
+				}else if(actionId==2){
+					final ArrayList<PotStatus> pList=(ArrayList<PotStatus>) objectInputStream.readObject();
+					this.onReceive(addr, pList); 
+				}
+			} catch (IOException e) {			
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {			
+				e.printStackTrace();
+			}    
+			/*final ArrayList<PotStatus> pList=GetPotStatusFromServer(objectInputStream);
+			final RealTime rTime = GetRealTimeFromServer(in);   //以下可能???
+			
+			this.onReceive(addr, pList);     
+			this.onReceive(addr, rTime);*/
+			
 		}
 		// 断开连接
 		try {
@@ -120,6 +156,37 @@ public abstract class SocketTransceiver implements Runnable {
 		this.onDisconnect(addr);
 	}
 
+	//从服务器读取实时曲线数据
+	private RealTime GetRealTimeFromServer(DataInputStream in) {
+		RealTime rTime = new RealTime();
+		try {
+			rTime.setCur(in.readInt());
+			rTime.setPotv(in.readInt());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return rTime;
+	}
+	
+	//从服务器读取槽状态数据
+	private ArrayList<PotStatus> GetPotStatusFromServer(ObjectInputStream objectInputStream) {
+		ArrayList<PotStatus> list = new ArrayList<PotStatus>();
+		
+		try {
+			try {
+				list=(ArrayList<PotStatus>) objectInputStream.readObject();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return list;
+	}
+
 	/**
 	 * 接收到数据
 	 * <p>
@@ -131,6 +198,12 @@ public abstract class SocketTransceiver implements Runnable {
 	 *            收到的字符串
 	 */
 	public abstract void onReceive(InetAddress addr, String s);
+
+	// 接受服务端发送过来的实时曲线数据
+	public abstract void onReceive(InetAddress addr, RealTime rTime);
+	
+	// 接受服务端发送过来的实时曲线数据
+	public abstract void onReceive(InetAddress addr, ArrayList<PotStatus> potStatus);
 
 	/**
 	 * 连接断开
