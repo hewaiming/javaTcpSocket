@@ -15,19 +15,29 @@ public final class R {
     }
     public static final class id {
         public static final int LinearLayout1=0x7f050000;
-        public static final int bn_connect=0x7f050005;
-        public static final int bn_send=0x7f050007;
-        public static final int ed_dat=0x7f050006;
+        public static final int bn_connect=0x7f050006;
+        public static final int bn_send=0x7f05000a;
+        public static final int bn_set=0x7f050003;
+        public static final int btnReturn=0x7f050013;
+        public static final int button1=0x7f050012;
+        public static final int ed_dat=0x7f050009;
         public static final int ed_ip=0x7f050002;
-        public static final int ed_port=0x7f050004;
-        public static final int scrollView1=0x7f050009;
+        public static final int ed_port=0x7f050005;
+        public static final int editText1=0x7f050010;
+        public static final int editText2=0x7f050011;
+        public static final int lv_potStatus=0x7f05000f;
+        public static final int scrollView1=0x7f05000d;
+        public static final int sp_potno=0x7f050008;
+        public static final int sp_potstatus=0x7f050007;
         public static final int textView1=0x7f050001;
-        public static final int textView2=0x7f050003;
-        public static final int textView4=0x7f050008;
-        public static final int tx_receive=0x7f05000a;
+        public static final int textView2=0x7f050004;
+        public static final int textView4=0x7f05000b;
+        public static final int tv_realtime=0x7f05000c;
+        public static final int tx_receive=0x7f05000e;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
+        public static final int setting=0x7f030001;
     }
     public static final class string {
         public static final int app_name=0x7f040001;
