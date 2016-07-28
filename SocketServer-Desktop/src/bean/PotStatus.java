@@ -11,9 +11,14 @@ public class PotStatus implements Serializable {
 	private float WorkV;
 	private int SetNb;
 	private int WorkNb;
+	private int AeSpan;  //Ae间隔
 	private String NbTime;
+	private int FaultNo;
+	private int YJWJ;  //阳极位置
+	
+	
 	public PotStatus(int potNo, String status, boolean autoRun, String operation, float setV, float workV, int setNb,
-			int workNb, String nbTime) {
+			int workNb, int aeSpan, String nbTime, int faultNo, int yJWJ) {
 		super();
 		PotNo = potNo;
 		Status = status;
@@ -23,7 +28,10 @@ public class PotStatus implements Serializable {
 		WorkV = workV;
 		SetNb = setNb;
 		WorkNb = workNb;
+		AeSpan = aeSpan;
 		NbTime = nbTime;
+		FaultNo = faultNo;
+		YJWJ = yJWJ;
 	}
 	public PotStatus() {
 		super();
@@ -82,11 +90,31 @@ public class PotStatus implements Serializable {
 	public void setNbTime(String nbTime) {
 		NbTime = nbTime;
 	}
+	public int getAeSpan() {
+		return AeSpan;
+	}
+	public void setAeSpan(int aeSpan) {
+		AeSpan = aeSpan;
+	}
+	public int getFaultNo() {
+		return FaultNo;
+	}
+	public void setFaultNo(int faultNo) {
+		FaultNo = faultNo;
+	}
+	public int getYJWJ() {
+		return YJWJ;
+	}
+	public void setYJWJ(int yJWJ) {
+		YJWJ = yJWJ;
+	}
 	@Override
 	public String toString() {
 		return "PotStatus [PotNo=" + PotNo + ", Status=" + Status + ", AutoRun=" + AutoRun + ", Operation=" + Operation
-				+ ", SetV=" + SetV + ", WorkV=" + WorkV + ", SetNb=" + SetNb + ", WorkNb=" + WorkNb + ", NbTime="
-				+ NbTime + "]";
+				+ ", SetV=" + SetV + ", WorkV=" + WorkV + ", SetNb=" + SetNb + ", WorkNb=" + WorkNb + ", AeSpan="
+				+ AeSpan + ", NbTime=" + NbTime + ", FaultNo=" + FaultNo + ", YJWJ=" + YJWJ + "]";
 	}
+	
+	
 
 }

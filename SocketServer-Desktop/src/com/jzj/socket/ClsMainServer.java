@@ -109,7 +109,7 @@ public class ClsMainServer {
 		for (int i = begin_potno; i <= end_potno; i++) {
 			PotStatus pStatus = new PotStatus();
 			pStatus.setPotNo(i);
-			pStatus.setStatus("");
+			pStatus.setStatus("预热");
 			pStatus.setAutoRun(false);
 			pStatus.setOperation("NB");
 			pStatus.setSetV((float) 4.001);
@@ -117,6 +117,9 @@ public class ClsMainServer {
 			pStatus.setSetNb(182);
 			pStatus.setWorkNb(200);
 			pStatus.setNbTime("11:20");
+			pStatus.setAeSpan(360);
+			pStatus.setFaultNo(5);
+			pStatus.setYJWJ(210);
 			list.add(pStatus);
 		}
 		client.send(2,list);
