@@ -3,18 +3,14 @@ package com.jzj.socket;
 import java.util.ArrayList;
 
 import bean.PotStatus;
+import bean.PotStatusDATA;
 import bean.RealTime;
 import bean.RequestAction;
 
 public class ClsMainClient {
 
 	public static void main(String[] args) {
-		TcpClient c1 = new TcpClient() {
-
-			@Override
-			public void onReceive(SocketTransceiver st, String s) {
-				System.out.println("Client1 Receive: " + s);
-			}
+		TcpClient c1 = new TcpClient() {	
 
 			@Override
 			public void onDisconnect(SocketTransceiver st) {
@@ -38,18 +34,14 @@ public class ClsMainClient {
 			}
 
 			@Override
-			public void onReceive(SocketTransceiver transceiver, ArrayList<PotStatus> potStatus) {
-				System.out.println("Client1 Receive PotStats"+potStatus.toString());
+			public void onReceive(SocketTransceiver transceiver, PotStatusDATA potStatus) {
+				System.out.println("Client1  槽状态  Receive data: "+potStatus.toString());
 				
 			}
+			
 		};
 		TcpClient c2 = new TcpClient() {
-
-			@Override
-			public void onReceive(SocketTransceiver st, String s) {
-				System.out.println("Client2 Receive: " + s);
-			}
-
+		
 			@Override
 			public void onDisconnect(SocketTransceiver st) {
 				System.out.println("Client2 Disconnect");
@@ -72,10 +64,11 @@ public class ClsMainClient {
 			}
 
 			@Override
-			public void onReceive(SocketTransceiver transceiver, ArrayList<PotStatus> potStatus) {
-				System.out.println("CLient2  POTSTATUS data: "+potStatus.toString());
+			public void onReceive(SocketTransceiver transceiver, PotStatusDATA potStatus) {
+				System.out.println("Client2  槽状态  Receive data: "+potStatus.toString());
 				
 			}
+			
 		};
 		TcpClient c3 = new TcpClient(){
 
@@ -89,42 +82,37 @@ public class ClsMainClient {
 			public void onConnectFailed() {
 				System.out.println("Client3 Connect Failed");
 				
-			}
-
-			@Override
-			public void onReceive(SocketTransceiver transceiver, String s) {
-				// TODO Auto-generated method stub
-				
-			}
+			}		
 
 			@Override
 			public void onReceive(SocketTransceiver transceiver, RealTime realTime) {
 				System.out.println("Client3 RealTime Receive data: "+realTime);
 				
 			}
-
-			@Override
-			public void onReceive(SocketTransceiver transceiver, ArrayList<PotStatus> potStatus) {
-				System.out.println("CLient3  POTSTATUS data: "+potStatus.toString());
-				
-			}
+			
 
 			@Override
 			public void onDisconnect(SocketTransceiver transceiver) {
 				System.out.println("Client3 DISConnect ");
 				
 			}
+
+			@Override
+			public void onReceive(SocketTransceiver transceiver, PotStatusDATA potStatus) {
+				System.out.println("Client3  槽状态  Receive data: "+potStatus.toString());
+				
+			}
 			
 		};
-		c1.connect("127.0.0.1", 1234);
-		c2.connect("127.0.0.1", 1234);
-		c3.connect("127.0.0.1", 1234);
+		c1.connect("192.168.0.9", 1234);
+		c2.connect("192.168.0.9", 1234);
+		c3.connect("192.168.0.9", 1234);
 		delay();
 		while (true) {
 			if (c1.isConnected()) {
 				RequestAction action=new RequestAction();
 				action.setActionId(1);
-				action.setPotNo_Area("2209");
+				action.setPotNo_Area("1208");
 				c1.getTransceiver().send(action);
 			
 			} else {
@@ -133,18 +121,17 @@ public class ClsMainClient {
 			delay();
 			if (c2.isConnected()) {
 				RequestAction action=new RequestAction();
-				action.setActionId(2);
-				action.setPotNo_Area("11");
+				action.setActionId(1);
+				action.setPotNo_Area("2136");
 				c2.getTransceiver().send(action);
-//				c2.getTransceiver().send("aostar");
 			} else {
 				break;
 			}
-			delay();
+			delay();	
 			if (c3.isConnected()) {
 				RequestAction action=new RequestAction();
 				action.setActionId(2);
-				action.setPotNo_Area("23");
+				action.setPotNo_Area("21");
 				c3.getTransceiver().send(action);
 			} else {
 				break;
@@ -155,7 +142,7 @@ public class ClsMainClient {
 
 	static void delay() {
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

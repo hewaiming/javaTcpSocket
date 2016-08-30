@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import bean.PotStatus;
+import bean.PotStatusDATA;
 import bean.RealTime;
 import bean.RequestAction;
 
@@ -72,26 +73,6 @@ public abstract class SocketTransceiver implements Runnable {
 		}
 	}
 
-	/**
-	 * 发送字符串
-	 * 
-	 * @param s
-	 *            字符串
-	 * @return 发送成功返回true
-	 */
-	public boolean send(String s) {
-		if (out != null) {
-			try {
-				out.writeUTF(s);
-				out.flush();
-				return true;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
-	}
-
 	// 向服务端发送操作命令
 	public boolean send(RequestAction action) {
 		if (out != null) {
@@ -115,32 +96,29 @@ public abstract class SocketTransceiver implements Runnable {
 		try {
 			in = new DataInputStream(this.socket.getInputStream());
 			out = new DataOutputStream(this.socket.getOutputStream());
-			objectInputStream=new ObjectInputStream(this.socket.getInputStream());
+			objectInputStream = new ObjectInputStream(this.socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 			runFlag = false;
 		}
 		while (runFlag) {
-		    try {
-				int actionId=objectInputStream.readInt();
-				if (actionId==1){
-					final RealTime rTime = (RealTime) objectInputStream.readObject();
-					this.onReceive(addr, rTime);
-				}else if(actionId==2){
-					final ArrayList<PotStatus> pList=(ArrayList<PotStatus>) objectInputStream.readObject();
-					this.onReceive(addr, pList); 
+			try {
+				if (objectInputStream != null) {
+					int actionId = objectInputStream.readInt();
+					if (actionId == 1) {
+						final RealTime rTime = (RealTime) objectInputStream.readObject();
+						if (rTime!=null) { this.onReceive(addr, rTime); }
+					} else if (actionId == 2) {
+						final PotStatusDATA pList = (PotStatusDATA) objectInputStream.readObject();
+						if (pList!=null) {this.onReceive(addr, pList);}
+					}
 				}
-			} catch (IOException e) {			
+			} catch (IOException e) {
 				e.printStackTrace();
-			} catch (ClassNotFoundException e) {			
+			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
-			}    
-			/*final ArrayList<PotStatus> pList=GetPotStatusFromServer(objectInputStream);
-			final RealTime rTime = GetRealTimeFromServer(in);   //以下可能???
-			
-			this.onReceive(addr, pList);     
-			this.onReceive(addr, rTime);*/
-			
+			}
+
 		}
 		// 断开连接
 		try {
@@ -156,58 +134,33 @@ public abstract class SocketTransceiver implements Runnable {
 		this.onDisconnect(addr);
 	}
 
-	//从服务器读取实时曲线数据
-	private RealTime GetRealTimeFromServer(DataInputStream in) {
-		RealTime rTime = new RealTime();
-		try {
-			rTime.setCur(in.readInt());
-			rTime.setPotv(in.readInt());
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return rTime;
-	}
+	// 从服务器读取实时曲线数据
+//	private RealTime GetRealTimeFromServer(DataInputStream in) {
+//		RealTime rTime = new RealTime();
+//		try {
+//			rTime.setCur(in.readInt());
+//			rTime.setPotv(in.readInt());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//		return rTime;
+//	}
 	
-	//从服务器读取槽状态数据
-	private ArrayList<PotStatus> GetPotStatusFromServer(ObjectInputStream objectInputStream) {
-		ArrayList<PotStatus> list = new ArrayList<PotStatus>();
-		
-		try {
-			try {
-				list=(ArrayList<PotStatus>) objectInputStream.readObject();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}		
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return list;
-	}
 
 	/**
 	 * 接收到数据
-	 * <p>
 	 * 注意：此回调是在新线程中执行的
-	 * 
-	 * @param addr
-	 *            连接到的Socket地址
-	 * @param s
-	 *            收到的字符串
+	 *            连接到的Socket地址	
 	 */
-	public abstract void onReceive(InetAddress addr, String s);
-
 	// 接受服务端发送过来的实时曲线数据
 	public abstract void onReceive(InetAddress addr, RealTime rTime);
-	
-	// 接受服务端发送过来的实时曲线数据
-	public abstract void onReceive(InetAddress addr, ArrayList<PotStatus> potStatus);
+
+	// 接受服务端发送过来的槽状态数据
+	public abstract void onReceive(InetAddress addr, PotStatusDATA potStatus);
 
 	/**
 	 * 连接断开
-	 * <p>
 	 * 注意：此回调是在新线程中执行的
 	 * 
 	 * @param addr

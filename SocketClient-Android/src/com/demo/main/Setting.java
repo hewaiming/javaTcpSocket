@@ -1,6 +1,7 @@
 package com.demo.main;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -16,6 +17,9 @@ public class Setting extends Activity {
 	private EditText edtip;
 	private EditText edtport;
 	SharedPreferences sp;
+	private Context ctx;
+	private String ip;
+	private int port;
 	private String TAG="=Setting=";
 
 	@Override

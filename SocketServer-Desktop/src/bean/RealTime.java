@@ -5,9 +5,17 @@ import java.io.Serializable;
 public class RealTime implements Serializable {
 	private int Cur;
 	private int Potv;
-
+    private int PotNo;
 	public RealTime() {
 
+	}
+
+	public int getPotNo() {
+		return PotNo;
+	}
+
+	public void setPotNo(int potNo) {
+		PotNo = potNo;
 	}
 
 	public int getCur() {
@@ -26,15 +34,17 @@ public class RealTime implements Serializable {
 		Potv = potv;
 	}
 
-	public RealTime(int cur, int potv) {
+	public RealTime(int cur, int potv, int potNo) {
 		super();
 		Cur = cur;
 		Potv = potv;
+		PotNo = potNo;
 	}
 
 	@Override
 	public String toString() {
-		return "RealTime [Cur=" + Cur + ", Potv=" + Potv + "]";
+		return "RealTime [Cur=" + Cur + ", Potv=" + Potv + ", PotNo=" + PotNo + "]";
 	}
+	
 
 }

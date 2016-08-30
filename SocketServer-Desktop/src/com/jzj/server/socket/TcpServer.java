@@ -1,55 +1,50 @@
-package com.jzj.socket;
+package com.jzj.server.socket;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import bean.PotStatusDATA;
+import bean.RealTime;
 import bean.RequestAction;
 
 /**
  * TCP Socket服务器端
- * 
- * @author jzj1993
- * @since 2015-2-22
  */
 public abstract class TcpServer implements Runnable {
 
 	private int port;
-	private boolean runFlag;
+	private boolean runFlag;	
 	private List<SocketTransceiver> clients = new ArrayList<SocketTransceiver>();
-
 	/**
-	 * 实例化
-	 * 
-	 * @param port
-	 *            监听的端口
+	 * 实例化 监听的端口
 	 */
 	public TcpServer(int port) {
 		this.port = port;
-	}
 
+	}
 	/**
-	 * 启动服务器
-	 * <p>
-	 * 如果启动失败，会回调{@code onServerStop()}
+	 * 启动服务器 如果启动失败，会回调{@code onServerStop()}
 	 */
-	public void start() {
+	public void start() {		
 		runFlag = true;
 		new Thread(this).start();
 	}
 
 	/**
-	 * 停止服务器
-	 * <p>
-	 * 服务器停止后，会回调{@code onServerStop()}
+	 * 停止服务器 服务器停止后，会回调{@code onServerStop()}
 	 */
 	public void stop() {
-		runFlag = false;
+		runFlag = false;		
 	}
-
 	/**
 	 * 监听端口，接受客户端连接(新线程中运行)
 	 */
@@ -86,82 +81,48 @@ public abstract class TcpServer implements Runnable {
 
 	/**
 	 * 启动客户端收发
-	 * 
-	 * @param socket
 	 */
 	private void startClient(final Socket socket) {
 		SocketTransceiver client = new SocketTransceiver(socket) {
 
-			@Override
-			public void onReceive(InetAddress addr, String s) {
-				TcpServer.this.onReceive(this, s);
-			}
-
-			
 			@Override
 			public void onDisconnect(InetAddress addr) {
 				clients.remove(this);
 				TcpServer.this.onDisconnect(this);
 			}
 
-
-			//处理客户端各种命令
+			// 处理客户端各种命令
 			@Override
 			public void onReceive(InetAddress addr, RequestAction action) {
-				TcpServer.this.onReceive(this, action);  //import
-				
+				if(action!=null){
+					TcpServer.this.onReceive(this, action); // import
+				}	
 			}
 		};
 		client.start();
 		clients.add(client);
 		this.onConnect(client);
 	}
-
 	/**
-	 * 客户端：连接建立
-	 * <p>
-	 * 注意：此回调是在新线程中执行的
-	 * 
-	 * @param client
-	 *            SocketTransceiver对象
+	 * 客户端：连接建立 注意：此回调是在新线程中执行的 SocketTransceiver对象
 	 */
 	public abstract void onConnect(SocketTransceiver client);
-
 	/**
-	 * 客户端：连接建立失败
-	 * <p>
-	 * 注意：此回调是在新线程中执行的
+	 * 客户端：连接建立失败 注意：此回调是在新线程中执行的
 	 */
 	public abstract void onConnectFailed();
+	/**
+	 * * 注意：此回调是在新线程中执行的 客户端：收到字符串
+	 */
+	public abstract void onReceive(SocketTransceiver client, RequestAction action);
 
 	/**
-	 * 客户端：收到字符串
-	 * <p>
-	 * 注意：此回调是在新线程中执行的
-	 * 
-	 * @param client
-	 *            SocketTransceiver对象
-	 * @param s
-	 *            字符串
-	 */
-	public abstract void onReceive(SocketTransceiver client, String s);
-	
-	
-	public abstract void onReceive(SocketTransceiver client, RequestAction action);
-	/**
-	 * 客户端：连接断开
-	 * <p>
-	 * 注意：此回调是在新线程中执行的
-	 * 
-	 * @param client
-	 *            SocketTransceiver对象
+	 * 客户端：连接断开 注意：此回调是在新线程中执行的
 	 */
 	public abstract void onDisconnect(SocketTransceiver client);
-
 	/**
-	 * 服务器停止
-	 * <p>
-	 * 注意：此回调是在新线程中执行的
+	 * 服务器停止 注意：此回调是在新线程中执行的
 	 */
 	public abstract void onServerStop();
+
 }
