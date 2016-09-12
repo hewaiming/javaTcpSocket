@@ -6,6 +6,8 @@ public class PotStatus implements Serializable {
 	private int PotNo;
 	private String Status;//槽状态
 	private boolean AutoRun;
+	private boolean AeFlag;
+	private byte Abnormal_Flag;
 	private String Operation;//槽作业
 	private String SetV;
 	private String WorkV;
@@ -197,15 +199,66 @@ public class PotStatus implements Serializable {
 	public void setAeV(String aeV) {
 		AeV = aeV;
 	}
+	
+	public boolean isAeFlag() {
+		return AeFlag;
+	}
+
+
+	public void setAeFlag(boolean aeFlag) {
+		AeFlag = aeFlag;
+	}
+
+
+	public byte getAbnormal_Flag() {
+		return Abnormal_Flag;
+	}
+
+
+	public void setAbnormal_Flag(byte abnormal_Flag) {
+		Abnormal_Flag = abnormal_Flag;
+	}
+
+
+	public PotStatus(int potNo, String status, boolean autoRun, boolean aeFlag, byte abnormal_Flag, String operation,
+			String setV, String workV, int setNb, int workNb, int nbPlus, String nbTime, int aeSpan, String aeDateTime,
+			String aeV, int aeContinue, String aeStatus, int aeCnt, String oStatus, int yJWJ, int faultNo, int noise,
+			int comerr) {
+		super();
+		PotNo = potNo;
+		Status = status;
+		AutoRun = autoRun;
+		AeFlag = aeFlag;
+		Abnormal_Flag = abnormal_Flag;
+		Operation = operation;
+		SetV = setV;
+		WorkV = workV;
+		SetNb = setNb;
+		WorkNb = workNb;
+		NbPlus = nbPlus;
+		NbTime = nbTime;
+		AeSpan = aeSpan;
+		AeDateTime = aeDateTime;
+		AeV = aeV;
+		AeContinue = aeContinue;
+		AeStatus = aeStatus;
+		AeCnt = aeCnt;
+		OStatus = oStatus;
+		YJWJ = yJWJ;
+		FaultNo = faultNo;
+		Noise = noise;
+		Comerr = comerr;
+	}
 
 
 	@Override
 	public String toString() {
-		return "PotStatus [PotNo=" + PotNo + ", Status=" + Status + ", AutoRun=" + AutoRun + ", Operation=" + Operation
-				+ ", SetV=" + SetV + ", WorkV=" + WorkV + ", SetNb=" + SetNb + ", WorkNb=" + WorkNb + ", NbPlus="
-				+ NbPlus + ", NbTime=" + NbTime + ", AeSpan=" + AeSpan + ", AeDateTime=" + AeDateTime + ", AeV=" + AeV
-				+ ", AeContinue=" + AeContinue + ", AeStatus=" + AeStatus + ", AeCnt=" + AeCnt + ", OStatus=" + OStatus
-				+ ", YJWJ=" + YJWJ + ", FaultNo=" + FaultNo + ", Noise=" + Noise + ", Comerr=" + Comerr + "]";
+		return "PotStatus [PotNo=" + PotNo + ", Status=" + Status + ", AutoRun=" + AutoRun + ", AeFlag=" + AeFlag
+				+ ", Abnormal_Flag=" + Abnormal_Flag + ", Operation=" + Operation + ", SetV=" + SetV + ", WorkV="
+				+ WorkV + ", SetNb=" + SetNb + ", WorkNb=" + WorkNb + ", NbPlus=" + NbPlus + ", NbTime=" + NbTime
+				+ ", AeSpan=" + AeSpan + ", AeDateTime=" + AeDateTime + ", AeV=" + AeV + ", AeContinue=" + AeContinue
+				+ ", AeStatus=" + AeStatus + ", AeCnt=" + AeCnt + ", OStatus=" + OStatus + ", YJWJ=" + YJWJ
+				+ ", FaultNo=" + FaultNo + ", Noise=" + Noise + ", Comerr=" + Comerr + "]";
 	}
 	
 	

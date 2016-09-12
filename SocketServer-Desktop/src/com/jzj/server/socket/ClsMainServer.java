@@ -192,15 +192,21 @@ public class ClsMainServer {
 			}
 
 			int worksta = RecvBuf[S + 1] & 0x03;
-			if (worksta == 3) {
+			/*if (worksta == 3) {
 				// System.out.println("槽状态：" + " 停槽 ");
 			} else {
 				// System.out.println("槽状态：" +WorkStatus[worksta] );
-			}
+			}*/
 			pStatus.setStatus(WorkStatus[worksta]);
 			int tmp = RecvBuf[S + 2] & 0x07;
 			// System.out.println("加料状态:" + AeStatus[tmp]);//
-			// RecvBuf[S+2]:=PCBST[RoomNo,A,i].SPAEST;//SPAEST
+			// 发生效应标志
+			if ((RecvBuf[S + 2] & 0x80)!=0){
+				pStatus.setAeFlag(true);
+			}else{
+				pStatus.setAeFlag(false);
+			}
+				
 			pStatus.setOStatus(AeStatus[tmp]);
 			// System.out.println("故障:" + RecvBuf[S + 3]);
 			pStatus.setFaultNo(RecvBuf[S + 3]);
@@ -247,7 +253,9 @@ public class ClsMainServer {
 			// System.out.println("NB时刻:" +Integer.toHexString(RecvBuf[S + 24])
 			// + ":" +Integer.toHexString(RecvBuf[S + 23])); // ok
 			pStatus.setNbTime(Integer.toHexString(RecvBuf[S + 24]) + ":" + Integer.toHexString(RecvBuf[S + 23]));
-
+		
+			pStatus.setAbnormal_Flag(RecvBuf[S+42]);	//第42位异常槽压和电压摆
+			
 			int Nbplus = ((RecvBuf[S + 44] & 0x00ff) << 8) + (RecvBuf[S + 43] & 0x00ff);
 			pStatus.setNbPlus(Nbplus);
 			// System.out.println("过欠:" + Nbplus);
