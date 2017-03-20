@@ -104,8 +104,8 @@ public class ClsMainClient {
 			}
 			
 		};
-		c1.connect("192.168.0.9", 1234);
-		c2.connect("192.168.0.9", 1234);
+		//c1.connect("192.168.0.9", 1234);
+		//c2.connect("192.168.0.9", 1234);
 		c3.connect("192.168.0.9", 1234);
 		delay();
 		while (true) {
@@ -131,7 +131,7 @@ public class ClsMainClient {
 			if (c3.isConnected()) {
 				RequestAction action=new RequestAction();
 				action.setActionId(2);
-				action.setPotNo_Area("21");
+				action.setPotNo_Area("11");
 				c3.getTransceiver().send(action);
 			} else {
 				break;

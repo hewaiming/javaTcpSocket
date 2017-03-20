@@ -26,38 +26,10 @@ public class PotStatus implements Serializable {
 	private int FaultNo;
 	private int Noise;  //噪音
 	private int Comerr; //通讯故障	
+	private int PotCtrl;  //槽状态控制字开关
 	public PotStatus() {
 		super();
 	}
-	
-	
-	public PotStatus(int potNo, String status, boolean autoRun, String operation, String setV, String workV, int setNb,
-			int workNb, int nbPlus, String nbTime, int aeSpan, String aeDateTime, String aeV, int aeContinue,
-			String aeStatus, int aeCnt, String oStatus, int yJWJ, int faultNo, int noise, int comerr) {
-		super();
-		PotNo = potNo;
-		Status = status;
-		AutoRun = autoRun;
-		Operation = operation;
-		SetV = setV;
-		WorkV = workV;
-		SetNb = setNb;
-		WorkNb = workNb;
-		NbPlus = nbPlus;
-		NbTime = nbTime;
-		AeSpan = aeSpan;
-		AeDateTime = aeDateTime;
-		AeV = aeV;
-		AeContinue = aeContinue;
-		AeStatus = aeStatus;
-		AeCnt = aeCnt;
-		OStatus = oStatus;
-		YJWJ = yJWJ;
-		FaultNo = faultNo;
-		Noise = noise;
-		Comerr = comerr;
-	}
-
 
 	public int getPotNo() {
 		return PotNo;
@@ -220,6 +192,17 @@ public class PotStatus implements Serializable {
 	}
 
 
+	
+	public int getPotCtrl() {
+		return PotCtrl;
+	}
+
+
+	public void setPotCtrl(int potCtrl) {
+		PotCtrl = potCtrl;
+	}
+
+
 	public PotStatus(int potNo, String status, boolean autoRun, boolean aeFlag, byte abnormal_Flag, String operation,
 			String setV, String workV, int setNb, int workNb, int nbPlus, String nbTime, int aeSpan, String aeDateTime,
 			String aeV, int aeContinue, String aeStatus, int aeCnt, String oStatus, int yJWJ, int faultNo, int noise,
@@ -251,6 +234,38 @@ public class PotStatus implements Serializable {
 	}
 
 
+	public PotStatus(int potNo, String status, boolean autoRun, boolean aeFlag, byte abnormal_Flag, String operation,
+			String setV, String workV, int setNb, int workNb, int nbPlus, String nbTime, int aeSpan, String aeDateTime,
+			String aeV, int aeContinue, String aeStatus, int aeCnt, String oStatus, int yJWJ, int faultNo, int noise,
+			int comerr, int potCtrl) {
+		super();
+		PotNo = potNo;
+		Status = status;
+		AutoRun = autoRun;
+		AeFlag = aeFlag;
+		Abnormal_Flag = abnormal_Flag;
+		Operation = operation;
+		SetV = setV;
+		WorkV = workV;
+		SetNb = setNb;
+		WorkNb = workNb;
+		NbPlus = nbPlus;
+		NbTime = nbTime;
+		AeSpan = aeSpan;
+		AeDateTime = aeDateTime;
+		AeV = aeV;
+		AeContinue = aeContinue;
+		AeStatus = aeStatus;
+		AeCnt = aeCnt;
+		OStatus = oStatus;
+		YJWJ = yJWJ;
+		FaultNo = faultNo;
+		Noise = noise;
+		Comerr = comerr;
+		PotCtrl = potCtrl;
+	}
+
+
 	@Override
 	public String toString() {
 		return "PotStatus [PotNo=" + PotNo + ", Status=" + Status + ", AutoRun=" + AutoRun + ", AeFlag=" + AeFlag
@@ -258,9 +273,8 @@ public class PotStatus implements Serializable {
 				+ WorkV + ", SetNb=" + SetNb + ", WorkNb=" + WorkNb + ", NbPlus=" + NbPlus + ", NbTime=" + NbTime
 				+ ", AeSpan=" + AeSpan + ", AeDateTime=" + AeDateTime + ", AeV=" + AeV + ", AeContinue=" + AeContinue
 				+ ", AeStatus=" + AeStatus + ", AeCnt=" + AeCnt + ", OStatus=" + OStatus + ", YJWJ=" + YJWJ
-				+ ", FaultNo=" + FaultNo + ", Noise=" + Noise + ", Comerr=" + Comerr + "]";
+				+ ", FaultNo=" + FaultNo + ", Noise=" + Noise + ", Comerr=" + Comerr + ", PotCtrl=" + PotCtrl + "]";
 	}
-	
-	
+
 
 }

@@ -191,13 +191,11 @@ public class ClsMainServer {
 				pStatus.setOperation("");
 			}
 
-			int worksta = RecvBuf[S + 1] & 0x03;
-			/*if (worksta == 3) {
-				// System.out.println("槽状态：" + " 停槽 ");
-			} else {
-				// System.out.println("槽状态：" +WorkStatus[worksta] );
-			}*/
+			int worksta = RecvBuf[S + 1] & 0x03;  //槽状态 
+		
 			pStatus.setStatus(WorkStatus[worksta]);
+			
+			pStatus.setPotCtrl( RecvBuf[S + 1]); // 槽控制字开关 S+1位 
 			int tmp = RecvBuf[S + 2] & 0x07;
 			// System.out.println("加料状态:" + AeStatus[tmp]);//
 			// 发生效应标志
